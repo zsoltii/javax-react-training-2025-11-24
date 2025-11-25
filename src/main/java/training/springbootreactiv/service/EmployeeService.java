@@ -15,11 +15,11 @@ public class EmployeeService {
     private final EmployeeRepository repository;
 
     public Flux<EmployeeDto> findAll() {
-        return repository.findAll().map(EmployeeService::toEmployeeDto);
+        return repository.findDtoAll();
     }
 
     public Mono<EmployeeDto> findById(Long id) {
-        return repository.findById(id).map(EmployeeService::toEmployeeDto);
+        return repository.findDtoById(id);
     }
 
     public Mono<EmployeeDto> save(Mono<EmployeeDto> employeeDto) {
