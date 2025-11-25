@@ -1,6 +1,7 @@
 package training.springbootreactiv.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -15,13 +16,20 @@ import training.springbootreactiv.dto.EmployeeNameDto;
 public class EmployeeService {
 
     private final EmployeeRepository repository;
+    private final ReactiveRedisTemplate reactiveRedisTemplate;
 
     public Flux<EmployeeDto> findAll() {
-        return repository.findDtoAll();
+        return repository.findDtoAll().flatMap(this::cacheInRedis);
     }
 
     public Mono<EmployeeDto> findById(Long id) {
-        return repository.findDtoById(id, EmployeeDto.class);
+        return reactiveRedisTemplate
+                .opsForValue()
+                .get(id)
+                .log()
+                .switchIfEmpty(
+                        repository.findDtoById(id, EmployeeDto.class).flatMap(this::cacheInRedis))
+                .log();
     }
 
     public Mono<EmployeeNameDto> findNameById(Long id) {
@@ -33,12 +41,21 @@ public class EmployeeService {
         return employeeDto
                 .map(EmployeeService::toEmployee)
                 .flatMap(repository::save)
-                .map(EmployeeService::toEmployeeDto);
+                .map(EmployeeService::toEmployeeDto)
+                .flatMap(this::cacheInRedis);
     }
 
     @Transactional
     public Mono<Void> deleteById(Long id) {
-        return repository.deleteById(id);
+        return repository.deleteById(id).then(Mono.defer(() -> clearFromRedisCache(id)));
+    }
+
+    private Mono<Void> clearFromRedisCache(Long id) {
+        return reactiveRedisTemplate.opsForValue().delete(id).then();
+    }
+
+    private Mono<EmployeeDto> cacheInRedis(EmployeeDto e) {
+        return reactiveRedisTemplate.opsForValue().set(e.id(), e).thenReturn(e);
     }
 
     private static EmployeeDto toEmployeeDto(Employee e) {

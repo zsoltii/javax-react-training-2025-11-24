@@ -21,3 +21,10 @@ services:
     volumes:
       - ./docker/mongodb/data:/data/db
 
+  training-redis:
+    container_name: training-redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/data:/data
