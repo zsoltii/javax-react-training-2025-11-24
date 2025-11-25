@@ -10,14 +10,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import training.springbootreactiv.dto.EmployeeDto;
 import training.springbootreactiv.service.EmployeeService;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -32,7 +29,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<EmployeeDto>> findById(@PathVariable Long id) {
+    public Mono<ResponseEntity<EmployeeDto>> findById(@PathVariable("id") Long id) {
         return employeeService.findById(id).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
@@ -50,7 +47,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<EmployeeDto>> update(@PathVariable Long id, @RequestBody Mono<EmployeeDto> employeeDto) {
+    public Mono<ResponseEntity<EmployeeDto>> update(@PathVariable("id") Long id, @RequestBody Mono<EmployeeDto> employeeDto) {
         return  employeeDto.filter(e -> e.id() != null && e.id().equals(id))
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Employee ID in path and body must match: %d".formatted(id))))
                 .flatMap(e -> employeeService.save(Mono.just(e)))
@@ -58,8 +55,8 @@ public class EmployeeController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping
-    public Mono<Void> deleteById(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public Mono<Void> deleteById(@PathVariable("id") Long id) {
         return employeeService.deleteById(id);
     }
 }
