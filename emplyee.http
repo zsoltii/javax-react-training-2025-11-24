@@ -1,0 +1,31 @@
+### find all emplyee
+GET localhost:8080/api/employees
+
+### find emplyee by id
+GET localhost:8080/api/employees/1
+
+### find emplyee by id doesn't exist
+GET localhost:8080/api/employees/999
+
+### create emplyee
+POST localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "yearOfBirth": 1990
+}
+
+### update emplyee
+PUT localhost:8080/api/employees/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "John Doe Updated",
+  "yearOfBirth": 1985
+}
+
+### delete emplyee
+DELETE localhost:8080/api/employees/1
+
