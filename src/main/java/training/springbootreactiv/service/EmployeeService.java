@@ -2,6 +2,7 @@ package training.springbootreactiv.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import training.springbootreactiv.db.Employee;
@@ -27,6 +28,7 @@ public class EmployeeService {
         return repository.findDtoById(id, EmployeeNameDto.class);
     }
 
+    @Transactional
     public Mono<EmployeeDto> save(Mono<EmployeeDto> employeeDto) {
         return employeeDto
                 .map(EmployeeService::toEmployee)
@@ -34,6 +36,7 @@ public class EmployeeService {
                 .map(EmployeeService::toEmployeeDto);
     }
 
+    @Transactional
     public Mono<Void> deleteById(Long id) {
         return repository.deleteById(id);
     }
