@@ -1,12 +1,11 @@
 package training.springbootreactiv.controller;
 
+import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import reactor.core.publisher.Mono;
-
-import java.net.URI;
 
 @ControllerAdvice
 public class EmployeeErrorHandler {

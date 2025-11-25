@@ -5,8 +5,9 @@ import java.util.stream.IntStream;
 
 public record Empleyee(String name, int yearOfBirth) {
     public int getAge(int year) {
-        if(year < yearOfBirth) {
-            throw new IllegalArgumentException("Year %d cannot be earlier than year of birth %d".formatted(year, yearOfBirth));
+        if (year < yearOfBirth) {
+            throw new IllegalArgumentException(
+                    "Year %d cannot be earlier than year of birth %d".formatted(year, yearOfBirth));
         }
         return year - yearOfBirth;
     }

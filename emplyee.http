@@ -17,11 +17,11 @@ Content-Type: application/json
 }
 
 ### update emplyee
-PUT localhost:8080/api/employees/1
+PUT localhost:8080/api/employees/2
 Content-Type: application/json
 
 {
-  "id": 1,
+  "id": 2,
   "name": "John Doe Updated",
   "yearOfBirth": 1985
 }

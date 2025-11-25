@@ -1,12 +1,12 @@
 package training.springbootreactiv.controller;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("HelloController tesztek")
 class HelloControllerTest {
@@ -29,10 +29,14 @@ class HelloControllerTest {
 
         // Ellenőrizzük a Mono tartalmát a StepVerifier segítségével
         StepVerifier.create(result)
-                .assertNext(message -> {
-                    assertNotNull(message, "A HelloMessage nem lehet null");
-                    assertEquals("Hello, World!", message.message(), "Az üzenet tartalma nem megfelelő");
-                })
+                .assertNext(
+                        message -> {
+                            assertNotNull(message, "A HelloMessage nem lehet null");
+                            assertEquals(
+                                    "Hello, World!",
+                                    message.message(),
+                                    "Az üzenet tartalma nem megfelelő");
+                        })
                 .expectComplete()
                 .verify();
     }
@@ -60,10 +64,12 @@ class HelloControllerTest {
     @DisplayName("Pozitív teszt: hello() metódus nem dob kivételt")
     void testHello_DoesNotThrowException() {
         // When & Then
-        assertDoesNotThrow(() -> {
-            Mono<HelloMessage> result = helloController.hello();
-            result.block(); // blokkolva várunk az eredményre
-        }, "A hello() metódus nem dobhat kivételt");
+        assertDoesNotThrow(
+                () -> {
+                    Mono<HelloMessage> result = helloController.hello();
+                    result.block(); // blokkolva várunk az eredményre
+                },
+                "A hello() metódus nem dobhat kivételt");
     }
 
     @Test
@@ -74,11 +80,14 @@ class HelloControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(message -> {
-                    assertNotNull(message.message(), "Az üzenet nem lehet null");
-                    assertFalse(message.message().isEmpty(), "Az üzenet nem lehet üres");
-                    assertTrue(message.message().length() > 0, "Az üzenet hossza nagyobb kell legyen mint 0");
-                })
+                .assertNext(
+                        message -> {
+                            assertNotNull(message.message(), "Az üzenet nem lehet null");
+                            assertFalse(message.message().isEmpty(), "Az üzenet nem lehet üres");
+                            assertTrue(
+                                    message.message().length() > 0,
+                                    "Az üzenet hossza nagyobb kell legyen mint 0");
+                        })
                 .expectComplete()
                 .verify();
     }
@@ -91,12 +100,20 @@ class HelloControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .assertNext(message -> {
-                    assertNotEquals("", message.message(), "Az üzenet nem lehet üres string");
-                    assertNotEquals("Goodbye!", message.message(), "Az üzenet nem lehet 'Goodbye!'");
-                    assertNotEquals("hello, world!", message.message(), "Az üzenet kis-nagybetű érzékeny");
-                    assertNotEquals(null, message.message(), "Az üzenet nem lehet null");
-                })
+                .assertNext(
+                        message -> {
+                            assertNotEquals(
+                                    "", message.message(), "Az üzenet nem lehet üres string");
+                            assertNotEquals(
+                                    "Goodbye!",
+                                    message.message(),
+                                    "Az üzenet nem lehet 'Goodbye!'");
+                            assertNotEquals(
+                                    "hello, world!",
+                                    message.message(),
+                                    "Az üzenet kis-nagybetű érzékeny");
+                            assertNotEquals(null, message.message(), "Az üzenet nem lehet null");
+                        })
                 .expectComplete()
                 .verify();
     }
@@ -127,4 +144,3 @@ class HelloControllerTest {
                 .verify();
     }
 }
-

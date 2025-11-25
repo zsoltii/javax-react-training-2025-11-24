@@ -1,4 +1,3 @@
 package training.springbootreactiv.controller;
 
-public record HelloMessage(String message) {
-}
+public record HelloMessage(String message) {}

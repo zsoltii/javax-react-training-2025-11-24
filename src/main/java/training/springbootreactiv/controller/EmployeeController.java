@@ -30,26 +30,40 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public Mono<ResponseEntity<EmployeeDto>> findById(@PathVariable("id") Long id) {
-        return employeeService.findById(id).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
+        return employeeService
+                .findById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Mono<ResponseEntity<EmployeeDto>> save(@RequestBody Mono<EmployeeDto> employeeDto, UriComponentsBuilder uriBuilder) {
-        return employeeService.save(employeeDto)
-                .map(e ->
-                        ResponseEntity
-                                .created(uriBuilder.path("/api/employees/{id}") // it is possible from method
-                                        .buildAndExpand(e.id())
-                                        .toUri()
-                                )
-                                .build()
-                );
+    public Mono<ResponseEntity<EmployeeDto>> save(
+            @RequestBody Mono<EmployeeDto> employeeDto, UriComponentsBuilder uriBuilder) {
+        return employeeService
+                .save(employeeDto)
+                .map(
+                        e ->
+                                ResponseEntity.created(
+                                                uriBuilder
+                                                        .path("/api/employees/{id}") // it is
+                                                        // possible
+                                                        // from
+                                                        // method
+                                                        .buildAndExpand(e.id())
+                                                        .toUri())
+                                        .build());
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<EmployeeDto>> update(@PathVariable("id") Long id, @RequestBody Mono<EmployeeDto> employeeDto) {
-        return  employeeDto.filter(e -> e.id() != null && e.id().equals(id))
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("Employee ID in path and body must match: %d".formatted(id))))
+    public Mono<ResponseEntity<EmployeeDto>> update(
+            @PathVariable("id") Long id, @RequestBody Mono<EmployeeDto> employeeDto) {
+        return employeeDto
+                .filter(e -> e.id() != null && e.id().equals(id))
+                .switchIfEmpty(
+                        Mono.error(
+                                new IllegalArgumentException(
+                                        "Employee ID in path and body must match: %d"
+                                                .formatted(id))))
                 .flatMap(e -> employeeService.save(Mono.just(e)))
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());

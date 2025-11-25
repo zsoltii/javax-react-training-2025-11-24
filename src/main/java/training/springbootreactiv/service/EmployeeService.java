@@ -34,7 +34,7 @@ public class EmployeeService {
     }
 
     private static EmployeeDto toEmployeeDto(Employee e) {
-        return new EmployeeDto(e.getId(), e.getName(), e.getYearOfBirth());
+        return new EmployeeDto(e.id(), e.name(), e.yearOfBirth());
     }
 
     private static Employee toEmployee(EmployeeDto dto) {
