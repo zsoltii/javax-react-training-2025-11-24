@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 import training.springbootreactiv.db.Employee;
 import training.springbootreactiv.db.EmployeeRepository;
 import training.springbootreactiv.dto.EmployeeDto;
+import training.springbootreactiv.dto.EmployeeNameDto;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +21,10 @@ public class EmployeeService {
 
     public Mono<EmployeeDto> findById(Long id) {
         return repository.findDtoById(id, EmployeeDto.class);
+    }
+
+    public Mono<EmployeeNameDto> findNameById(Long id) {
+        return repository.findDtoById(id, EmployeeNameDto.class);
     }
 
     public Mono<EmployeeDto> save(Mono<EmployeeDto> employeeDto) {

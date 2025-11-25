@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import training.springbootreactiv.dto.EmployeeDto;
+import training.springbootreactiv.dto.EmployeeNameDto;
 import training.springbootreactiv.service.EmployeeService;
 
 @RestController
@@ -32,6 +33,14 @@ public class EmployeeController {
     public Mono<ResponseEntity<EmployeeDto>> findById(@PathVariable("id") Long id) {
         return employeeService
                 .findById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/name")
+    public Mono<ResponseEntity<EmployeeNameDto>> findNameById(@PathVariable("id") Long id) {
+        return employeeService
+                .findNameById(id)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }

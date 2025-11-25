@@ -4,6 +4,9 @@ GET localhost:8080/api/employees
 ### find emplyee by id
 GET localhost:8080/api/employees/3
 
+### finad emplyee name by id
+GET localhost:8080/api/employees/3/name
+
 ### find emplyee by id doesn't exist
 GET localhost:8080/api/employees/999
 
