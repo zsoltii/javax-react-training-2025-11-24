@@ -1,0 +1,34 @@
+### find all emplyee
+GET localhost:8080/api/mongo/employees
+
+### find emplyee by id
+GET localhost:8080/api/mongo/employees/69259a690950e9d3153b269a
+
+### finad emplyee name by id
+GET localhost:8080/api/mongo/employees/69259a690950e9d3153b269a/name
+
+### find emplyee by id doesn't exist
+GET localhost:8080/api/mongo/employees/999
+
+### create emplyee
+POST localhost:8080/api/mongo/employees
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "yearOfBirth": 1990
+}
+
+### update emplyee
+PUT localhost:8080/api/mongo/employees/69259a690950e9d3153b269a
+Content-Type: application/json
+
+{
+  "id": "69259a690950e9d3153b269a",
+  "name": "John Doe Updated",
+  "yearOfBirth": 1985
+}
+
+### delete emplyee
+DELETE localhost:8080/api/mongo/employees/1
+
