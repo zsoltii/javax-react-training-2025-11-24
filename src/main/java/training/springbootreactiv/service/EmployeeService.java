@@ -1,6 +1,7 @@
 package training.springbootreactiv.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ public class EmployeeService {
 
     private final EmployeeRepository repository;
     private final ReactiveRedisTemplate reactiveRedisTemplate;
+    private final StreamBridge streamBridge;
 
     public Flux<EmployeeDto> findAll() {
         return repository.findDtoAll().flatMap(this::cacheInRedis);
@@ -42,12 +44,17 @@ public class EmployeeService {
                 .map(EmployeeService::toEmployee)
                 .flatMap(repository::save)
                 .map(EmployeeService::toEmployeeDto)
+                .doOnNext(this::sendEventKafka)
                 .flatMap(this::cacheInRedis);
     }
 
     @Transactional
     public Mono<Void> deleteById(Long id) {
         return repository.deleteById(id).then(Mono.defer(() -> clearFromRedisCache(id)));
+    }
+
+    private boolean sendEventKafka(EmployeeDto employee) {
+        return streamBridge.send("employeesEvents", employee);
     }
 
     private Mono<Void> clearFromRedisCache(Long id) {

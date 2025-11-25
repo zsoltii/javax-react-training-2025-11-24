@@ -173,7 +173,7 @@ class HelloControllerTest {
                             assertNotNull(message, "A HelloMessage nem lehet null");
                             assertNotNull(message.message(), "Az üzenet tartalma nem lehet null");
                             assertEquals(
-                                    "Stub Hello Message",
+                                    "From WebClient: Stub Hello Message",
                                     message.message(),
                                     "Az üzenet tartalma nem egyezik a stub által visszaadott értékkel");
                         })
@@ -190,7 +190,7 @@ class HelloControllerTest {
 
         // Then
         StepVerifier.create(result)
-                .expectNext(new HelloMessage("Stub Hello Message"))
+                .expectNext(new HelloMessage("From WebClient: Stub Hello Message"))
                 .expectComplete()
                 .verify();
     }
@@ -217,12 +217,12 @@ class HelloControllerTest {
 
         // Then - mindkét hívás ugyanazt az üzenetet adja
         StepVerifier.create(result1)
-                .expectNext(new HelloMessage("Stub Hello Message"))
+                .expectNext(new HelloMessage("From WebClient: Stub Hello Message"))
                 .expectComplete()
                 .verify();
 
         StepVerifier.create(result2)
-                .expectNext(new HelloMessage("Stub Hello Message"))
+                .expectNext(new HelloMessage("From WebClient: Stub Hello Message"))
                 .expectComplete()
                 .verify();
     }
