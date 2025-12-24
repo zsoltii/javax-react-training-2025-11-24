@@ -49,3 +49,11 @@ services:
       - 9092:9092
     volumes:
       - ./docker/kafka/data:/var/lib/kafka/data
+
+  training-ollama:
+    container_name: training-ollama
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./docker/ollama:/root/.ollama

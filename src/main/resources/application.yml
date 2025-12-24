@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: spring-boot-reactiv
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/employees
+    username: employees
+    password: employees
+  data:
+    mongodb:
+      database: employees
+      host: localhost
+      port: 27017
+      # uri: mongodb://localhost:27017/employees
+      # username: employees
+      # password: employees
+  cloud:
+    function:
+      definition: employeeEventsHandler
+    stream:
+      bindings:
+        employeesEvents:
+          destination: employees-events
+        employeeEventsHandler-in-0:
+          destination: employees-events
+  ai:
+    # https://docs.spring.io/spring-ai/reference/api/chat/ollama-chat.html
+    ollama:
+      base-url: http://localhost:11434
+      init:
+        pull-model-strategy: when_missing
+        timeout: 15m
+        max-retries: 3
+      chat:
+        options:
+          model: qwen3:0.6b
+          num-ctx: 8192
+          num-predict: 512
+          # it will be creative :)
+          temperature: 1.2
+          top-p: 0.95
+          top-k: 60
+          repeat-penalty: 1.15
+      embedding:
+        options:
+          model: embeddinggemma:latest
