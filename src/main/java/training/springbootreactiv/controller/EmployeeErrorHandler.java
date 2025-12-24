@@ -19,7 +19,7 @@ public class EmployeeErrorHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setTitle("Bad Request");
         problemDetail.setDetail(e.getMessage());
-        problemDetail.setType(URI.create(HttpStatus.BAD_REQUEST.getReasonPhrase()));
+        problemDetail.setType(URI.create("bad-request"));
         return problemDetail;
     }
 }
