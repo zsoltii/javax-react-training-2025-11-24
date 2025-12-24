@@ -32,14 +32,21 @@ spring:
         max-retries: 3
       chat:
         options:
-          model: qwen3:0.6b
+          model: qwen3-vl:2b-instruct
+          # model: qwen3:4b
+          # model: qwen3:1.7b
+          # model: phi4-mini-reasoning:latest
+          # model: deepseek-r1:1.5b
           num-ctx: 8192
-          num-predict: 512
+          num-predict: -2
           # it will be creative :)
           temperature: 1.2
           top-p: 0.95
           top-k: 60
           repeat-penalty: 1.15
+          # thinking
+          think-option:
+            think: true
       embedding:
         options:
           model: embeddinggemma:latest

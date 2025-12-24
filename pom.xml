@@ -19,6 +19,9 @@
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <reactor-bom.version>2024.0.1</reactor-bom.version>
         <spring-ai.version>1.1.2</spring-ai.version>
+        <google-java-format.version>1.33.0</google-java-format.version>
+        <spotless-maven-plugin.version>3.1.0</spotless-maven-plugin.version>
+        <prettier.version>3.6.2</prettier.version>
     </properties>
 
     <dependencyManagement>
@@ -109,6 +112,11 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-ollama</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -134,19 +142,57 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>${spotless-maven-plugin.version}</version>
                 <configuration>
                     <java>
                         <googleJavaFormat>
-                            <version>1.32.0</version>
+                            <version>${google-java-format.version}</version>
                             <style>AOSP</style>
                         </googleJavaFormat>
                         <encoding>UTF-8</encoding>
                     </java>
+                    <css>
+                        <includes>
+                            <include>src/main/resources/**/*.css</include>
+                            <include>src/main/resources/**/*.less</include>
+                        </includes>
+                        <prettier>
+                            <devDependencies>
+                                <prettier>${prettier.version}</prettier>
+                            </devDependencies>
+                        </prettier>
+                    </css>
+                    <javascript>
+                        <includes>
+                            <include>src/main/resources/**/*.js</include>
+                        </includes>
+                        <prettier>
+                            <devDependencies>
+                                <prettier>${prettier.version}</prettier>
+                            </devDependencies>
+                        </prettier>
+                    </javascript>
+                    <formats>
+                        <format>
+                            <includes>
+                                <include>src/**/*.html</include>
+                            </includes>
+                            <eclipseWtp>
+                                <type>HTML</type>
+                            </eclipseWtp>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <indent>
+                                <spaces>true</spaces>
+                                <spacesPerTab>2</spacesPerTab>
+                            </indent>
+                        </format>
+                    </formats>
                 </configuration>
                 <executions>
                     <execution>
                         <id>spotless-apply</id>
+                        <phase>clean</phase>
                         <goals>
                             <goal>apply</goal>
                         </goals>

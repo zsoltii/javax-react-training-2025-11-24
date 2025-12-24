@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Chat</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
+  type="text/javascript"></script>
+<!-- Material Design -->
+<link rel="stylesheet"
+  href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+  rel="stylesheet">
+<link rel="stylesheet/less" type="text/css" href="css/chat.less" />
+<script src="https://cdn.jsdelivr.net/npm/less" type="text/javascript"></script>
+</head>
+<body class="mdc-typography">
+  <h1>Ollama Chat</h1>
+
+  <div class="input-container">
+    <label
+      class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea"
+      style="flex-grow: 1;"> <span class="mdc-text-field__ripple"></span>
+      <textarea id="questionInput" class="mdc-text-field__input" rows="8"
+        aria-labelledby="question-label" cols=""></textarea> <span
+      class="mdc-notched-outline"> <span
+        class="mdc-notched-outline__leading"></span> <span
+        class="mdc-notched-outline__notch"> <span
+          class="mdc-floating-label" id="question-label">Írd be a
+            kérdésed... (Shift+Enter új sor)</span>
+      </span> <span class="mdc-notched-outline__trailing"></span>
+    </span>
+    </label>
+
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div id="dictate-select" class="mdc-select mdc-select--outlined">
+        <div class="mdc-select__anchor" role="button"
+          aria-haspopup="listbox" aria-expanded="false">
+          <span class="mdc-select__ripple"></span> <span
+            class="mdc-notched-outline"> <span
+            class="mdc-notched-outline__leading"></span> <span
+            class="mdc-notched-outline__notch"> <span
+              class="mdc-floating-label">Diktálás nyelve</span>
+          </span> <span class="mdc-notched-outline__trailing"></span>
+          </span> <span class="mdc-select__selected-text-container"> <span
+            class="mdc-select__selected-text"></span>
+          </span> <span class="mdc-select__dropdown-icon"> <svg
+              class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5">
+              <polygon class="mdc-select__dropdown-icon-inactive"
+                stroke="none" fill-rule="evenodd" points="7 10 12 15 17 10"></polygon>
+              <polygon class="mdc-select__dropdown-icon-active"
+                stroke="none" fill-rule="evenodd" points="7 15 12 10 17 15"></polygon></svg>
+          </span>
+        </div>
+        <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+          <div style="padding: 0 16px; border-bottom: 1px solid #eee;">
+            <input type="text" id="dictate-search" placeholder="Keresés..."
+              style="width: 100%; border: none; outline: none; font-size: 1rem; padding: 12px 0;">
+          </div>
+          <ul class="mdc-list" id="dictateLang"
+            style="max-height: 300px; overflow-y: auto;"></ul>
+        </div>
+      </div>
+
+      <button id="dictateButton" class="mdc-button">
+        <span class="mdc-button__ripple"></span> <i
+          class="material-icons mdc-button__icon" aria-hidden="true">mic</i>
+        <span class="mdc-button__label">Diktálás</span>
+      </button>
+
+      <button id="clearQuestion" class="mdc-button">
+        <span class="mdc-button__ripple"></span> <i
+          class="material-icons mdc-button__icon" aria-hidden="true">clear</i>
+        <span class="mdc-button__label">Törlés</span>
+      </button>
+
+      <button id="chatButton" class="mdc-button mdc-button--raised">
+        <span class="mdc-button__ripple"></span> <i
+          class="material-icons mdc-button__icon" aria-hidden="true">send</i>
+        <span class="mdc-button__label">Chat</span>
+      </button>
+    </div>
+  </div>
+
+  <h2>Gondolkodás</h2>
+  <div id="thinking" class="mdc-card mdc-card--outlined"></div>
+  <div class="stats-container">
+    <p id="thinkingTimerDisplay"></p>
+    <p id="thinkingStatsDisplay"></p>
+  </div>
+
+  <h2>Válasz</h2>
+  <div id="response" class="mdc-card mdc-card--outlined"></div>
+  <div class="stats-container">
+    <p id="responseTimerDisplay"></p>
+    <p id="responseStatsDisplay"></p>
+  </div>
+
+  <div class="mdc-card mdc-card--outlined speech-controls">
+    <div class="speech-settings">
+      <div id="voice-select" class="mdc-select mdc-select--outlined"
+        style="min-width: 500px;">
+        <div class="mdc-select__anchor" role="button"
+          aria-haspopup="listbox" aria-expanded="false">
+          <span class="mdc-select__ripple"></span> <span
+            class="mdc-notched-outline"> <span
+            class="mdc-notched-outline__leading"></span> <span
+            class="mdc-notched-outline__notch"> <span
+              class="mdc-floating-label">Hang</span>
+          </span> <span class="mdc-notched-outline__trailing"></span>
+          </span> <span class="mdc-select__selected-text-container"> <span
+            class="mdc-select__selected-text"></span>
+          </span> <span class="mdc-select__dropdown-icon"> <svg
+              class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5">
+              <polygon class="mdc-select__dropdown-icon-inactive"
+                stroke="none" fill-rule="evenodd" points="7 10 12 15 17 10"></polygon>
+              <polygon class="mdc-select__dropdown-icon-active"
+                stroke="none" fill-rule="evenodd" points="7 15 12 10 17 15"></polygon></svg>
+          </span>
+        </div>
+        <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+          <div style="padding: 0 16px; border-bottom: 1px solid #eee;">
+            <input type="text" id="voice-search" placeholder="Keresés..."
+              style="width: 100%; border: none; outline: none; font-size: 1rem; padding: 12px 0;">
+          </div>
+          <ul class="mdc-list" id="voiceSelect"
+            style="max-height: 300px; overflow-y: auto;"></ul>
+        </div>
+      </div>
+    </div>
+    <div class="speech-settings">
+      <label class="mdc-typography--body1">Sebesség: <span
+        id="rateValue">1</span></label>
+      <div id="rate-slider" class="mdc-slider" style="min-width: 200px;">
+        <input class="mdc-slider__input" type="range" min="0.5" max="2"
+          value="1" step="0.1" name="rate">
+        <div class="mdc-slider__track">
+          <div class="mdc-slider__track--inactive"></div>
+          <div class="mdc-slider__track--active">
+            <div class="mdc-slider__track--active_fill"></div>
+          </div>
+        </div>
+        <div class="mdc-slider__thumb">
+          <div class="mdc-slider__thumb-knob"></div>
+        </div>
+      </div>
+    </div>
+    <div class="speech-settings">
+      <label class="mdc-typography--body1">Hangmagasság: <span
+        id="pitchValue">1</span></label>
+      <div id="pitch-slider" class="mdc-slider" style="min-width: 200px;">
+        <input class="mdc-slider__input" type="range" min="0" max="2"
+          value="1" step="0.1" name="pitch">
+        <div class="mdc-slider__track">
+          <div class="mdc-slider__track--inactive"></div>
+          <div class="mdc-slider__track--active">
+            <div class="mdc-slider__track--active_fill"></div>
+          </div>
+        </div>
+        <div class="mdc-slider__thumb">
+          <div class="mdc-slider__thumb-knob"></div>
+        </div>
+      </div>
+    </div>
+    <div class="speech-buttons">
+      <button id="readButton" class="mdc-button">
+        <span class="mdc-button__ripple"></span> <i
+          class="material-icons mdc-button__icon" aria-hidden="true">volume_up</i>
+        <span class="mdc-button__label">Felolvasás</span>
+      </button>
+      <button id="stopButton" class="mdc-button">
+        <span class="mdc-button__ripple"></span> <i
+          class="material-icons mdc-button__icon" aria-hidden="true">volume_off</i>
+        <span class="mdc-button__label">Felolvasás leállítása</span>
+      </button>
+    </div>
+  </div>
+
+  <script
+    src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"
+    type="text/javascript"></script>
+  <script src="js/mdc-init.js" defer type="text/javascript"></script>
+  <script src="js/speech.js" defer type="text/javascript"></script>
+  <script src="js/chat.js" defer type="text/javascript"></script>
+</body>
+</html>

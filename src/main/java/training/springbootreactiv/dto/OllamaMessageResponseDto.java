@@ -1,3 +1,3 @@
 package training.springbootreactiv.dto;
 
-public record OllamaMessageResponseDto(String message) {}
+public record OllamaMessageResponseDto(String message, String thinking) {}

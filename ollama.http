@@ -6,6 +6,14 @@ Content-Type: application/json
   "question": "What is the meaning of life?"
 }
 
+### chat
+POST http://localhost:8080/api/ollama/chat
+Content-Type: application/json
+
+{
+  "question": "Hi"
+}
+
 ### chat invalid
 POST http://localhost:8080/api/ollama/chat
 Content-Type: application/json

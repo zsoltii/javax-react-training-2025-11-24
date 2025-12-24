@@ -51,9 +51,27 @@ services:
       - ./docker/kafka/data:/var/lib/kafka/data
 
   training-ollama:
+    # for nvidia, amd and cpu version, please read this: https://hub.docker.com/r/ollama/ollama
     container_name: training-ollama
-    image: ollama/ollama
+    image: ollama/ollama:rocm
+#    devices:
+#      - /dev/kfd
+#      - /dev/dri
+#    group_add:
+#      - video
+#      - render
+#      - ollama
     ports:
       - "11434:11434"
     volumes:
       - ./docker/ollama:/root/.ollama
+
+  training-ollama-intel:
+    image: ollama/ollama:latest
+    container_name: training-ollama-intel
+    devices:
+      - /dev/dri:/dev/dri  # Intel GPU
+    volumes:
+      - ./docker/ollama:/root/.ollama
+    ports:
+      - "11434:11434"

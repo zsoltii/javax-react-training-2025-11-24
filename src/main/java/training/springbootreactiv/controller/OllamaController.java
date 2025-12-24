@@ -29,6 +29,13 @@ public class OllamaController {
                                         Mono.error(
                                                 new IllegalArgumentException(
                                                         "Question field is blank in request object"))))
-                .map(OllamaMessageResponseDto::new);
+                .map(
+                        response ->
+                                new OllamaMessageResponseDto(
+                                        response.getResult().getOutput().getText(),
+                                        // documentation:
+                                        // https://docs.spring.io/spring-ai/reference/api/chat/ollama-chat.html#_enabling_thinking_mode
+                                        // it doesn't work: 2025.12.24
+                                        response.getMetadata().get("thinking")));
     }
 }
