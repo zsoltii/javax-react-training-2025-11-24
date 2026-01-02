@@ -22,6 +22,22 @@ public class OllamaController {
 
     @PostMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<OllamaMessageResponseDto> chat(@RequestBody Mono<OllamaMessageRequestDto> request) {
+        /*
+        return request.filter(req -> StringUtils.hasText(req.question()))
+        .switchIfEmpty(
+                Mono.error(
+                        new IllegalArgumentException(
+                                "Question field is blank in request object")))
+        .flux()
+        .flatMap(requestDto -> ollamaService.chat(Mono.just(requestDto)))
+        .map(response ->
+                new OllamaMessageResponseDto(
+                        response.getResult().getOutput().getText(),
+                        // documentation:
+                        // https://docs.spring.io/spring-ai/reference/api/chat/ollama-chat.html#_enabling_thinking_mode
+                        // it doesn't work with ollama: 2025.12.24
+                        response.getMetadata().get("thinking")));
+                        */
         return ollamaService
                 .chat(
                         request.filter(req -> StringUtils.hasText(req.question()))

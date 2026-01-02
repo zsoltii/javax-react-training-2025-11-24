@@ -2,6 +2,7 @@ package training.springbootreactiv.controller;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,11 @@ public class IdentityController {
         return identityService.findAll();
     }
 
+    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<IdentityDto> findAllAsStream() {
+        return identityService.findAll();
+    }
+
     @GetMapping("/{id}")
     public Mono<ResponseEntity<IdentityDto>> findById(@PathVariable("id") UUID id) {
         return identityService
@@ -50,6 +56,24 @@ public class IdentityController {
                                                         // from
                                                         // method
                                                         .buildAndExpand(e.id())
+                                                        .toUri())
+                                        .build());
+    }
+
+    @PostMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ResponseEntity<IdentityDto>> saveAsStream(
+            @RequestBody Flux<IdentityDto> identityDtos, UriComponentsBuilder uriBuilder) {
+        return identityDtos
+                .flatMap(identityDto -> identityService.save(Mono.just(identityDto)))
+                .map(
+                        identityDto ->
+                                ResponseEntity.created(
+                                                uriBuilder
+                                                        .path("/api/identity/{id}") // it is
+                                                        // possible
+                                                        // from
+                                                        // method
+                                                        .buildAndExpand(identityDto.id())
                                                         .toUri())
                                         .build());
     }
