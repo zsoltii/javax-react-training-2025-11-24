@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import training.springbootreactiv.dto.HelloMessageDto;
 import training.springbootreactiv.gateway.HelloClient;
 
 @DisplayName("HelloController tesztek")
@@ -17,8 +18,8 @@ class HelloControllerTest {
     // Egyszerű stub implementáció a HelloClient interfészhez
     private static class HelloClientStub implements HelloClient {
         @Override
-        public Mono<HelloMessage> hello() {
-            return Mono.just(new HelloMessage("Stub Hello Message"));
+        public Mono<HelloMessageDto> hello() {
+            return Mono.just(new HelloMessageDto("Stub Hello Message"));
         }
     }
 
@@ -32,7 +33,7 @@ class HelloControllerTest {
     @DisplayName("Pozitív teszt: hello() metódus visszaad egy Mono<HelloMessage> objektumot")
     void testHello_ReturnsMonoWithHelloMessage() {
         // When
-        Mono<HelloMessage> result = helloController.hello();
+        Mono<HelloMessageDto> result = helloController.hello();
 
         // Then
         assertNotNull(result, "A visszaadott Mono nem lehet null");
@@ -55,8 +56,8 @@ class HelloControllerTest {
     @DisplayName("Pozitív teszt: hello() metódus mindig ugyanazt az üzenet formátumot adja vissza")
     void testHello_ConsistentMessage() {
         // Given - több hívás
-        Mono<HelloMessage> result1 = helloController.hello();
-        Mono<HelloMessage> result2 = helloController.hello();
+        Mono<HelloMessageDto> result1 = helloController.hello();
+        Mono<HelloMessageDto> result2 = helloController.hello();
 
         // Then - mindkét hívás ugyanazt az üzenet formátumot adja
         StepVerifier.create(result1)
@@ -76,7 +77,7 @@ class HelloControllerTest {
         // When & Then
         assertDoesNotThrow(
                 () -> {
-                    Mono<HelloMessage> result = helloController.hello();
+                    Mono<HelloMessageDto> result = helloController.hello();
                     result.block(); // blokkolva várunk az eredményre
                 },
                 "A hello() metódus nem dobhat kivételt");
@@ -86,7 +87,7 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: az üzenet nem lehet üres string")
     void testHello_MessageIsNotEmpty() {
         // When
-        Mono<HelloMessage> result = helloController.hello();
+        Mono<HelloMessageDto> result = helloController.hello();
 
         // Then
         StepVerifier.create(result)
@@ -106,7 +107,7 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: az üzenet nem egyezik meg hibás értékekkel")
     void testHello_MessageDoesNotMatchIncorrectValues() {
         // When
-        Mono<HelloMessage> result = helloController.hello();
+        Mono<HelloMessageDto> result = helloController.hello();
 
         // Then
         StepVerifier.create(result)
@@ -132,7 +133,7 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: a Mono nem lehet üres")
     void testHello_MonoIsNotEmpty() {
         // When
-        Mono<HelloMessage> result = helloController.hello();
+        Mono<HelloMessageDto> result = helloController.hello();
 
         // Then
         StepVerifier.create(result)
@@ -145,7 +146,7 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: a Mono nem hibával fejeződik be")
     void testHello_MonoDoesNotCompleteWithError() {
         // When
-        Mono<HelloMessage> result = helloController.hello();
+        Mono<HelloMessageDto> result = helloController.hello();
 
         // Then
         StepVerifier.create(result)
@@ -161,7 +162,7 @@ class HelloControllerTest {
             "Pozitív teszt: helloWebCLient() metódus visszaad egy Mono<HelloMessage> objektumot")
     void testHelloWebClient_ReturnsMonoWithHelloMessage() {
         // When
-        Mono<HelloMessage> result = helloController.helloWebCLient();
+        Mono<HelloMessageDto> result = helloController.helloWebCLient();
 
         // Then
         assertNotNull(result, "A visszaadott Mono nem lehet null");
@@ -186,11 +187,11 @@ class HelloControllerTest {
             "Pozitív teszt: helloWebCLient() a HelloClient által visszaadott üzenetet használja")
     void testHelloWebClient_UsesHelloClientMessage() {
         // When
-        Mono<HelloMessage> result = helloController.helloWebCLient();
+        Mono<HelloMessageDto> result = helloController.helloWebCLient();
 
         // Then
         StepVerifier.create(result)
-                .expectNext(new HelloMessage("From WebClient: Stub Hello Message"))
+                .expectNext(new HelloMessageDto("From WebClient: Stub Hello Message"))
                 .expectComplete()
                 .verify();
     }
@@ -201,7 +202,7 @@ class HelloControllerTest {
         // When & Then
         assertDoesNotThrow(
                 () -> {
-                    Mono<HelloMessage> result = helloController.helloWebCLient();
+                    Mono<HelloMessageDto> result = helloController.helloWebCLient();
                     result.block(); // blokkolva várunk az eredményre
                 },
                 "A helloWebCLient() metódus nem dobhat kivételt");
@@ -212,17 +213,17 @@ class HelloControllerTest {
             "Pozitív teszt: helloWebCLient() mindig ugyanazt az üzenetet adja vissza a stub miatt")
     void testHelloWebClient_ConsistentMessageFromStub() {
         // Given - több hívás
-        Mono<HelloMessage> result1 = helloController.helloWebCLient();
-        Mono<HelloMessage> result2 = helloController.helloWebCLient();
+        Mono<HelloMessageDto> result1 = helloController.helloWebCLient();
+        Mono<HelloMessageDto> result2 = helloController.helloWebCLient();
 
         // Then - mindkét hívás ugyanazt az üzenetet adja
         StepVerifier.create(result1)
-                .expectNext(new HelloMessage("From WebClient: Stub Hello Message"))
+                .expectNext(new HelloMessageDto("From WebClient: Stub Hello Message"))
                 .expectComplete()
                 .verify();
 
         StepVerifier.create(result2)
-                .expectNext(new HelloMessage("From WebClient: Stub Hello Message"))
+                .expectNext(new HelloMessageDto("From WebClient: Stub Hello Message"))
                 .expectComplete()
                 .verify();
     }
@@ -231,7 +232,7 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: helloWebCLient() által visszaadott üzenet nem lehet üres")
     void testHelloWebClient_MessageIsNotEmpty() {
         // When
-        Mono<HelloMessage> result = helloController.helloWebCLient();
+        Mono<HelloMessageDto> result = helloController.helloWebCLient();
 
         // Then
         StepVerifier.create(result)
@@ -251,7 +252,7 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: helloWebCLient() által visszaadott Mono nem lehet üres")
     void testHelloWebClient_MonoIsNotEmpty() {
         // When
-        Mono<HelloMessage> result = helloController.helloWebCLient();
+        Mono<HelloMessageDto> result = helloController.helloWebCLient();
 
         // Then
         StepVerifier.create(result)
@@ -264,7 +265,7 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: helloWebCLient() által visszaadott Mono nem hibával fejeződik be")
     void testHelloWebClient_MonoDoesNotCompleteWithError() {
         // When
-        Mono<HelloMessage> result = helloController.helloWebCLient();
+        Mono<HelloMessageDto> result = helloController.helloWebCLient();
 
         // Then
         StepVerifier.create(result)
@@ -277,7 +278,7 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: helloWebCLient() üzenete nem egyezik meg hibás értékekkel")
     void testHelloWebClient_MessageDoesNotMatchIncorrectValues() {
         // When
-        Mono<HelloMessage> result = helloController.helloWebCLient();
+        Mono<HelloMessageDto> result = helloController.helloWebCLient();
 
         // Then
         StepVerifier.create(result)
@@ -299,8 +300,8 @@ class HelloControllerTest {
     @DisplayName("Negatív teszt: helloWebCLient() nem adja vissza a hello() metódus formátumát")
     void testHelloWebClient_DifferentFromHelloMethod() {
         // When
-        Mono<HelloMessage> helloResult = helloController.hello();
-        Mono<HelloMessage> webClientResult = helloController.helloWebCLient();
+        Mono<HelloMessageDto> helloResult = helloController.hello();
+        Mono<HelloMessageDto> webClientResult = helloController.helloWebCLient();
 
         // Then - a két metódus különböző üzeneteket ad vissza
         String helloMessage = helloResult.block().message();
