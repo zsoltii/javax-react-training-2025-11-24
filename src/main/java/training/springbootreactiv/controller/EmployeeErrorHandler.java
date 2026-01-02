@@ -11,6 +11,11 @@ import reactor.core.publisher.Mono;
 public class EmployeeErrorHandler {
 
     @ExceptionHandler
+    public Mono<ProblemDetail> handle(Exception ex) {
+        return Mono.just(ex).map(EmployeeErrorHandler::getProblemDetail);
+    }
+
+    @ExceptionHandler
     public Mono<ProblemDetail> handle(IllegalArgumentException ex) {
         return Mono.just(ex).map(EmployeeErrorHandler::getProblemDetail);
     }
@@ -20,6 +25,14 @@ public class EmployeeErrorHandler {
         problemDetail.setTitle("Bad Request");
         problemDetail.setDetail(e.getMessage());
         problemDetail.setType(URI.create("bad-request"));
+        return problemDetail;
+    }
+
+    private static ProblemDetail getProblemDetail(Exception e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        problemDetail.setTitle("Internal Server Error");
+        problemDetail.setDetail(e.getMessage());
+        problemDetail.setType(URI.create("internal-server-error"));
         return problemDetail;
     }
 }

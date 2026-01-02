@@ -1,0 +1,24 @@
+### find all
+GET localhost:8080/api/identity
+
+### find by id
+GET localhost:8080/api/identity/f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454
+
+### find by id doesn't exist
+GET localhost:8080/api/identity/f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454
+
+### create
+POST localhost:8080/api/identity
+Content-Type: application/json
+
+{
+  "id": "018b2f19-e79e-7d6a-a56d-29feb6211b04"
+}
+
+### delete
+DELETE localhost:8080/api/identity
+Content-Type: application/json
+
+{
+  "id": "f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454"
+}

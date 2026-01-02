@@ -23,14 +23,12 @@ public class OllamaService {
                                 chatClient
                                         .prompt()
                                         .user(question)
-                                        // it doesn't work with none thinking models
-                                        //                                        .options(
-                                        //
-                                        // OllamaChatOptions.builder()
-                                        //
-                                        // .enableThinking()
-                                        //
-                                        // .build())
+                                        // it doesn't work
+                                        // with none thinking models
+                                        // .options(
+                                        //        OllamaChatOptions.builder()
+                                        //                .enableThinking()
+                                        //                .build())
                                         .stream()
                                         .chatResponse());
     }
