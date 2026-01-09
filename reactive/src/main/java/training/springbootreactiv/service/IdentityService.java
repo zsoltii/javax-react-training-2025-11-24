@@ -26,13 +26,13 @@ public class IdentityService {
     @Transactional
     public Mono<IdentityDto> save(Mono<IdentityDto> identityDto) {
         return identityDto
-                .log()
+                //                .log()
                 .map(IdentityService::toIdentity)
-                .log()
+                //                .log()
                 .flatMap(repository::save)
-                .log()
-                .map(IdentityService::identityDto)
-                .log();
+                //                .log()
+                .map(IdentityService::identityDto);
+        //                .log();
     }
 
     @Transactional

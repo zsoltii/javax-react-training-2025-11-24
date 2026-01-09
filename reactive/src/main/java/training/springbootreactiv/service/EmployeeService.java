@@ -28,10 +28,10 @@ public class EmployeeService {
         return reactiveRedisTemplate
                 .opsForValue()
                 .get(id)
-                .log()
+                //                .log()
                 .switchIfEmpty(
-                        repository.findDtoById(id, EmployeeDto.class).flatMap(this::cacheInRedis))
-                .log();
+                        repository.findDtoById(id, EmployeeDto.class).flatMap(this::cacheInRedis));
+        //                .log();
     }
 
     public Mono<EmployeeNameDto> findNameById(Long id) {

@@ -19,17 +19,16 @@ public class HelloController {
     @GetMapping
     public Mono<HelloMessageDto> hello() {
         return Mono.just(
-                        new HelloMessageDto(
-                                "Hello, World! The time is: %s"
-                                        .formatted(LocalDateTime.now().toString())))
-                .log();
+                new HelloMessageDto(
+                        "Hello, World! The time is: %s".formatted(LocalDateTime.now().toString())));
+        //                .log();
     }
 
     @GetMapping("/webclient")
     public Mono<HelloMessageDto> helloWebCLient() {
         return helloClient
                 .hello()
-                .log()
+                //                .log()
                 .map(hello -> new HelloMessageDto("From WebClient: %s".formatted(hello.message())));
     }
 }
