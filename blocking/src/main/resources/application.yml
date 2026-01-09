@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: identity-jpa
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employees
+    username: employees
+    password: employees
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: false
+

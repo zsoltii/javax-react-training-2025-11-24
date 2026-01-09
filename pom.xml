@@ -13,6 +13,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>spring-boot-reactiv</name>
 
+    <packaging>pom</packaging>
+
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -50,156 +52,103 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>r2dbc-postgresql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-binder-kafka-reactive</artifactId>
-        </dependency>
-
-        <!-- Tesztelési függőségek -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-test-binder</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-model-ollama</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
-
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless-maven-plugin.version}</version>
+                    <configuration>
+                        <java>
+                            <googleJavaFormat>
+                                <version>${google-java-format.version}</version>
+                                <style>AOSP</style>
+                            </googleJavaFormat>
+                            <encoding>UTF-8</encoding>
+                        </java>
+<!--                        <css>-->
+<!--                            <includes>-->
+<!--                                <include>src/main/resources/**/*.css</include>-->
+<!--                                <include>src/main/resources/**/*.less</include>-->
+<!--                            </includes>-->
+<!--                            <prettier>-->
+<!--                                <devDependencies>-->
+<!--                                    <prettier>${prettier.version}</prettier>-->
+<!--                                </devDependencies>-->
+<!--                            </prettier>-->
+<!--                        </css>-->
+<!--                        <javascript>-->
+<!--                            <includes>-->
+<!--                                <include>src/main/resources/**/*.js</include>-->
+<!--                            </includes>-->
+<!--                            <prettier>-->
+<!--                                <devDependencies>-->
+<!--                                    <prettier>${prettier.version}</prettier>-->
+<!--                                </devDependencies>-->
+<!--                            </prettier>-->
+<!--                        </javascript>-->
+                        <formats>
+                            <format>
+                                <includes>
+                                    <include>src/**/*.html</include>
+                                </includes>
+                                <eclipseWtp>
+                                    <type>HTML</type>
+                                </eclipseWtp>
+                                <trimTrailingWhitespace/>
+                                <endWithNewline/>
+                                <indent>
+                                    <spaces>true</spaces>
+                                    <spacesPerTab>2</spacesPerTab>
+                                </indent>
+                            </format>
+                        </formats>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>spotless-apply</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>apply</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- Spotless plugin hozzáadása -->
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>${spotless-maven-plugin.version}</version>
-                <configuration>
-                    <java>
-                        <googleJavaFormat>
-                            <version>${google-java-format.version}</version>
-                            <style>AOSP</style>
-                        </googleJavaFormat>
-                        <encoding>UTF-8</encoding>
-                    </java>
-                    <css>
-                        <includes>
-                            <include>src/main/resources/**/*.css</include>
-                            <include>src/main/resources/**/*.less</include>
-                        </includes>
-                        <prettier>
-                            <devDependencies>
-                                <prettier>${prettier.version}</prettier>
-                            </devDependencies>
-                        </prettier>
-                    </css>
-                    <javascript>
-                        <includes>
-                            <include>src/main/resources/**/*.js</include>
-                        </includes>
-                        <prettier>
-                            <devDependencies>
-                                <prettier>${prettier.version}</prettier>
-                            </devDependencies>
-                        </prettier>
-                    </javascript>
-                    <formats>
-                        <format>
-                            <includes>
-                                <include>src/**/*.html</include>
-                            </includes>
-                            <eclipseWtp>
-                                <type>HTML</type>
-                            </eclipseWtp>
-                            <trimTrailingWhitespace/>
-                            <endWithNewline/>
-                            <indent>
-                                <spaces>true</spaces>
-                                <spacesPerTab>2</spacesPerTab>
-                            </indent>
-                        </format>
-                    </formats>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>spotless-apply</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>apply</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
+
+    <modules>
+        <module>reactive</module>
+        <module>blocking</module>
+    </modules>
 
 </project>

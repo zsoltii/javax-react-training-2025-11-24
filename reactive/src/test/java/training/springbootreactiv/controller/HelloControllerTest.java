@@ -7,11 +7,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import training.springbootreactiv.TestBase;
 import training.springbootreactiv.dto.HelloMessageDto;
 import training.springbootreactiv.gateway.HelloClient;
 
 @DisplayName("HelloController tesztek")
-class HelloControllerTest {
+class HelloControllerTest extends TestBase {
 
     private HelloController helloController;
 

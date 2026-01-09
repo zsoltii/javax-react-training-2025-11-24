@@ -35,10 +35,10 @@ spring:
           # model: qwen3-vl:2b-instruct
           # model: qwen3:4b
           # model: qwen3:1.7b
-          model: phi4-mini-reasoning:latest
+          # model: phi4-mini-reasoning:latest
           # model: deepseek-r1:1.5b
           # model: tinydolphin:latest
-          # model: tinyllama:latest
+          model: tinyllama:latest
           num-ctx: 8192
           num-predict: -2
           # it will be creative :)
